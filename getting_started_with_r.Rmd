@@ -1,0 +1,168 @@
+---
+title: "Getting Started with R"
+author: "Jennifer Fowler"
+date: "6/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+
+# using this symbol renders a line inactive, R will skip over it when reading your code commands. 
+# this is called "commenting" and is used to make notes in your code
+# you can use these notes to remind yourself why or how you did something
+# or to show someone else when you share your code
+
+# here is an active code line: 
+
+R.Version()
+
+#this will check which version of R is installed on your computer and return the information in the console
+
+# R will read your commands in this structure: function(variable)
+
+```
+
+
+We are going to explore some data that comes built into R and perform a basic linear regression and a simple plot. 
+
+One dataset that comes with R is called quakes and is a record of earthquakes off the coast of Fiji. 
+
+First we have to load the data so R knows what we want to work with. 
+
+
+```{r}
+# load the data using the data() function
+data(quakes)
+```
+
+Now let's take a look at the data. This is an important first step in working with data, called exploratory data analysis or EDA.
+
+R has some great functions to help us look at data.
+
+```{r}
+# examine the structure of the dataset using the str() function
+str(quakes)
+```
+Now we see the names of the columns/variables/features, and what those columns contain (the data points or observations), as well as how large the dataset is and the type of variables involved (numeric and integers).
+
+```{r}
+#examine the first six rows of the dataset using the head() function
+head(quakes)
+```
+
+This gave us a nice table view of the first six rows and the columns of the dataset. Now let's see what it looks like in some basic plots. I wonder, which variables might be related or correlated? 
+
+```{r}
+# we will build some plots to see if it looks like any variables are correlated
+# let's start with magnitude and depth of the earthquakes
+# we can use the plot() function with the formula plot(x,y) in format data$variable, data$variable
+
+plot(quakes$mag, quakes$depth)
+```
+
+That doesn't look like depth and magnitude is correlated. Let's try another one.
+
+```{r}
+# trying the plot function again, with depth and number of stations reporting
+plot(quakes$depth, quakes$stations)
+```
+It doesn't look like depth and number of stations reporting is correlated either. Let's try one more. 
+
+```{r}
+# trying the plot function again, with magnitude and number of stations reporting
+plot(quakes$mag, quakes$stations)
+```
+Now that looks interesting. Makes a bit of sense, that the stronger the earthquake, the more stations would detect it and report it. Let's make the plot look a bit better. 
+
+```{r}
+# we are going to add some labels and a title to the plot
+plot(quakes$mag, quakes$stations,
+     #first we will do the x-label
+     xlab= "Magnitude",
+     #now the y-label
+     ylab= "Number of Stations Reported",
+     # now the main plot title
+     main= "Magnitude of Fiji Earthquakes and Number of Stations Reported",
+     # let's change the plot points color, R can recognize a number of color names
+     # try a color you like inside double quotation marks
+     # look at the R color cheat sheet in your student binder
+     col = "blue",
+     # and change the plotting character symbol
+     #this can be a range from 0-18 with different symbols
+     #try and find one you like
+     pch = 3
+     )
+```
+
+Now we have a pretty plot, let's see mathematically or statistically evaluate what that correlation is. We can use a built-in function for linear regression model lm(). In this function we will give it the argument lm(response~predictor) where the response is the y variable and predictor is the x variable. In our example, what is the response? What is the predictor?
+
+```{r}
+# now build the linear model, let's assign it a special name
+quakes.model=lm(quakes$stations~quakes$mag)
+```
+
+Great, it showed up in our environment pane --->
+Let's see the details using the summary() function.
+
+```{r}
+#check the summary of the linear regression model
+summary(quakes.model)
+```
+
+Ok, let's see what the summary tells us. Quick reminder: a linear regression model or correlation has the formula y = mx+b where m is the slope and b is the y-intercept. 
+
+The slope is 46.28. What is the intercept?  
+
+So our formula is... 
+
+What is the p-value, and is it statistically significant?
+
+Let's plot the line of our linear regression formula on our plot.
+
+```{r}
+plot(quakes$mag, quakes$stations,
+     xlab= "Magnitude",
+     ylab= "Number of Stations Reported",
+     main= "Magnitude of Fiji Earthquakes and Number of Stations Reported",
+     col = "blue",
+     pch = 3
+)
+# now we will add a feature to the plot
+#and the function for an a-b line which adds a straight line
+abline(-180.42, 46.28)
+```
+
+I want the line to be more visible. Let's change the color and width of it. 
+
+```{r}
+plot(quakes$mag, quakes$stations,
+     xlab= "Magnitude",
+     ylab= "Number of Stations Reported",
+     main= "Magnitude of Fiji Earthquakes and Number of Stations Reported",
+     col = "blue",
+     pch = 3
+)
+  #customize the line color using col = , and line width by lwd =
+abline(-180.42, 46.28, col = "red", lwd = 3)
+```
+
+
+If we have time...
+
+Let's explore what other datasets are built into R that we can play with.
+
+```{r}
+# this prints a list of all the built-in datasets
+data()
+```
+
